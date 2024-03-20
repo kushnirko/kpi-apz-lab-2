@@ -3,25 +3,82 @@ package main
 import (
 	"flag"
 	"fmt"
-	lab2 "github.com/roman-mazur/architecture-lab-2"
+	lab2 "github.com/kushnirko/kpi-apz-lab-2.git"
+	"io"
+	"os"
+	"strings"
 )
 
 var (
-	inputExpression = flag.String("e", "", "Expression to compute")
-	// TODO: Add other flags support for input and output configuration.
+	inputExpression    = flag.String("e", "", "Expression to compute")
+	expressionLocation = flag.String("f", "", "Location of the expression to compute")
+	resultOutput       = flag.String("o", "", "Where to display conversion results")
 )
+
+func GetInput() (io.Reader, error) {
+	var inp io.Reader
+	var err error
+
+	if *inputExpression != "" {
+		inp = strings.NewReader(*inputExpression)
+	}
+
+	if *expressionLocation != "" {
+		inp, err = os.Open(*expressionLocation)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return inp, nil
+}
+
+func GetOutput() (io.Writer, error) {
+	if *resultOutput == "" {
+		return os.Stdout, nil
+	}
+
+	_, err := os.Stat(*resultOutput)
+	if err != nil {
+		if os.IsNotExist(err) {
+			file, err := os.Create(*resultOutput)
+			if err != nil {
+				return os.Stdout, err
+			}
+			return file, nil
+		} else {
+			return os.Stdout, err
+		}
+	}
+
+	file, err := os.Open(*resultOutput)
+	if err != nil {
+		return os.Stdout, err
+	}
+
+	return file, nil
+}
 
 func main() {
 	flag.Parse()
+	input, err := GetInput()
+	if err != nil {
+		fmt.Println("File error:", err)
+		return
+	}
 
-	// TODO: Change this to accept input from the command line arguments as described in the task and
-	//       output the results using the ComputeHandler instance.
-	//       handler := &lab2.ComputeHandler{
-	//           Input: {construct io.Reader according the command line parameters},
-	//           Output: {construct io.Writer according the command line parameters},
-	//       }
-	//       err := handler.Compute()
+	output, err := GetOutput()
+	if err != nil {
+		fmt.Println("File error:", err)
+		return
+	}
 
-	res, _ := lab2.PrefixToPostfix("+ 2 2")
-	fmt.Println(res)
+	handler := &lab2.ComputeHandler{
+		Input:  input,
+		Output: output,
+	}
+	err = handler.Compute()
+	if err != nil {
+		fmt.Println("Args error", err)
+	}
 }
