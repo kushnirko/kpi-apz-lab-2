@@ -12,7 +12,7 @@ import (
 var (
 	inputExpression    = flag.String("e", "", "Expression to compute")
 	expressionLocation = flag.String("f", "", "Location of the expression to compute")
-	resultOutput       = flag.String("o", "", "Where to display conversion results")
+	resultOutput       = flag.String("o", "", "Where to place conversion results")
 )
 
 func GetInput() (io.Reader, error) {
@@ -51,7 +51,7 @@ func GetOutput() (io.Writer, error) {
 		}
 	}
 
-	file, err := os.Open(*resultOutput)
+	file, err := os.OpenFile(*resultOutput, os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		return os.Stdout, err
 	}
@@ -79,6 +79,6 @@ func main() {
 	}
 	err = handler.Compute()
 	if err != nil {
-		fmt.Println("Args error", err)
+		fmt.Println("Args error:", err)
 	}
 }
