@@ -15,4 +15,4 @@ Made by [KPI](https://kpi.ua) [FICE](https://fiot.kpi.ua) students of the **IM-2
 
 ### [Failed build](https://github.com/kushnirko/kpi-apz-lab-2/actions/runs/8393095550)
 
-### [Build for pull request](https://github.com/kushnirko/kpi-apz-lab-2/actions/runs/8393023091)
+### [Build for pull request](https://github.com/kushnirko/kpi-apz-lab-2/actions/runs/8392746596)
