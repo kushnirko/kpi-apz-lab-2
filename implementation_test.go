@@ -18,7 +18,7 @@ func TestPostfixToPrefix(t *testing.T) {
 			name:        "Empty string",
 			expression:  "",
 			expectedRes: "",
-			expectedErr: errors.New("expression not found"),
+			expectedErr: errors.New("😈"),
 		},
 		{
 			name:        "Invalid character",
